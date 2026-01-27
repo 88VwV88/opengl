@@ -10,13 +10,11 @@ CXX := g++
 
 WARNINGS := -W -Wall -Wextra -Wconversion
 
-CXXFLAGS := -DGLEW_STATIC $(WARNINGS) -std=c++23 -ggdb -O0
-CCFLAGS  := -DGLEW_STATIC $(WARNINGS) -std=c23 -ggdb -O0
+CXXFLAGS := -DGLEW_STATIC $(WARNINGS) -std=c++23 -ggdb -O0 -Iinclude/
+CCFLAGS  := -DGLEW_STATIC $(WARNINGS) -std=c23   -ggdb -O0 -Iinclude/
 
 TARGET := opengl
-LDFLAGS := -lglfw3 -lgdi32 -lopengl32 -lglm -lassimp
-
-.PHONY: all setup test clean
+LDFLAGS := -lGL -lglfw -lglm -lz -lassimp
 
 SRC := $(wildcard src/*.c*)
 OBJ := $(patsubst src/%, out/%.o, $(SRC))
@@ -43,14 +41,23 @@ out/%.c.o: src/%.c
 all: setup $(PCH) $(OBJ)
 	@printf "$(GREEN) BUILDING$(RESET) $(TARGET)\n"
 	@$(CXX) $(OBJ) -o $(TARGET) $(LDFLAGS)
+.PHONY: all
 
 test: all
 	@printf "$(GREEN)  RUNNING$(RESET) $(TARGET)\n"
+	@gdb ./$(TARGET)
+.PHONY: test
+
+run: all
+	@printf "$(GREEN)  RUNNING$(RESET) $(TARGET)\n"
 	@./$(TARGET)
+.PHONY: run
 
 clean:
 	@printf "$(RED)CLEANING BUILD FILES$(RESET)\n"
 	rm -rf out/* $(TARGET) src/*.gch
+.PHONY: clean
 
 setup:
 	@mkdir -p out
+.PHONY: setup

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
 
 #include <algorithm>
 #include <stdexcept>
@@ -96,3 +97,5 @@ private:
     Up = glm::normalize(glm::cross(Right, Front));
   }
 };
+
+#endif
